@@ -4,11 +4,13 @@
   "description": "",
   "main": "toDoList.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+	"test": "echo \"Error: no test specified\" && exit 1",
+	"lint": "eslint *.js --fix"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^5.16.0"
+    "eslint": "^5.16.0",
+    "eslint-config-ckeditor5": "^1.0.14"
   }
 }
