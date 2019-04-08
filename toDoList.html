@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
+    <title>To-do list</title>
+
+    <style>
+        div > button {
+            width: 100px;
+        }
+        .task-list-item {
+            padding: 2px;
+            margin: 5px;
+            border: grey 2px solid;
+            width: 345px;
+            color: grey;
+            background-color: #e9fbfa;
+        }
+        .task-list-item.done {
+            padding: 2px;
+            margin: 5px;
+            border: grey 2px solid;
+            width: 345px; 
+        }
+        .remove {
+            width: fit-content;
+            float: right;
+        }
+        body {
+            background-color: black;
+            color: grey;
+            font-family: Oswald;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div>
+        To-do list
+    </div>
+    <div>
+        <input type="text" size=40 placeholder="Add your task here" id="task">
+        <button id="add">Add</button>
+    </div>
+   
+    <script src="toDoList.js"></script>
+</body>
+
+</html>
