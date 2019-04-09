@@ -10,6 +10,12 @@ function createListItem() {
 	task.innerText = taskInput.value;
 	taskInput.value = '';
 	document.body.appendChild( task );
+	const taskObject = {
+		id: createId(),
+		value: task.innerText,
+		done: false,
+	};
+	taskList.push( taskObject );
 	const remove = document.createElement( 'BUTTON' );
 	remove.innerHTML = 'X';
 	remove.classList.add( 'remove' );
@@ -24,3 +30,6 @@ function createListItem() {
 	} );
 }
 
+function createId() {
+	return Math.floor( Math.random() * 100 );
+}
