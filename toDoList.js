@@ -1,80 +1,75 @@
-const addButton = document.getElementById( 'add' );
-const taskInput = document.getElementById( 'task' );
-// tasklist-> tasks
-let taskList = [];
-// funkcja ktora zwraca poczatkowe dane -> przypisanie do tasks
-if ( localStorage.getItem( 'tasklist' ) ) { //'tasklist' powinno byc zmienna
-	//try catch
-	taskList = JSON.parse( localStorage.getItem( 'tasklist' ) );
-	taskList.forEach( createListItem );
-}
+( function() {
+	const addButton = document.getElementById( 'add' );
+	const taskInput = document.getElementById( 'task' );
+	const tasksContainer = document.getElementById( 'tasks-container' );
+	const localStorageKey = 'to-do-list';
 
-taskInput.addEventListener( 'keyup', function( event ) {
-	// key name?
-	if ( event.keyCode === 13 ) {
-		document.getElementById( 'add' ).click();
-	}
-} );
-// pod spodem na osobną funkcję do click i enter
-// taskObject -> task
-addButton.addEventListener( 'click', () => {
-	if ( !taskInput.value ) {
-		return;
+	const tasks = getInitialData();
+	tasks.forEach( renderTask );
+
+	function getInitialData() {
+		if ( localStorage.getItem( localStorageKey ) ) {
+			return JSON.parse( localStorage.getItem( localStorageKey ) );
+		} else {
+			return [];
+		}
 	}
 
-	const taskObject = {
-		value: taskInput.value,
-		done: false,
-	};
-
-	taskList.push( taskObject );
-	createListItem( taskObject );
-	updateLocalStorage( taskList );
-
-} );
-
-function createListItem( task ) {
-	const taskElement = document.createElement( 'DIV' );
-	const removeButton = document.createElement( 'BUTTON' );
-
-	taskElement.classList.add( 'task-list-item' );
-	taskElement.innerText = task.value;
-	taskInput.value = '';
-	removeButton.innerHTML = 'X';
-	removeButton.classList.add( 'remove' );
-	taskElement.appendChild( removeButton );
-
-	taskElement.classList.toggle( 'done', task.done );
-
-	taskElement.addEventListener( 'click', event => {
-		if ( event.target === taskElement ) {
-			task.done = !task.done;
-			taskElement.classList.toggle( 'done' );
-			updateLocalStorage( taskList );
+	taskInput.addEventListener( 'keyup', function( event ) {
+		if ( event.key === 'Enter' ) {
+			addTask();
 		}
 	} );
 
-	removeButton.addEventListener( 'click', () => {
-		const index = taskList.findIndex( t => t == task );
-		taskList.splice( index, 1 );
-		taskElement.remove();
-		updateLocalStorage( taskList );
-	} );
+	addButton.addEventListener( 'click', addTask );
 
-	document.body.appendChild( taskElement );
-}
+	function addTask() {
+		if ( !taskInput.value ) {
+			return;
+		}
 
-function updateLocalStorage( taskList ) {
-	localStorage.setItem( 'tasklist', JSON.stringify( taskList ) );
-}
-// function createUniqueId() {
-// 	const id = Math.floor( Math.random() * Math.pow( 10, 6 ) );
+		const task = {
+			value: taskInput.value,
+			done: false,
+		};
 
-// 	for ( const element of taskList ) {
-// 		if ( element.id == id ) {
-// 			return createUniqueId();
-// 		}
-// 	}
+		tasks.push( task );
+		renderTask( task );
+		saveTasks();
+	}
 
-// 	return id;
-// }
+	function renderTask( task ) {
+		const taskElement = document.createElement( 'DIV' );
+		const removeButton = document.createElement( 'BUTTON' );
+
+		taskElement.classList.add( 'task-list-item' );
+		taskElement.innerText = task.value;
+		taskInput.value = '';
+		removeButton.innerHTML = 'X';
+		removeButton.classList.add( 'remove' );
+		taskElement.appendChild( removeButton );
+
+		taskElement.classList.toggle( 'done', task.done );
+
+		taskElement.addEventListener( 'click', event => {
+			if ( event.target === taskElement ) {
+				task.done = !task.done;
+				taskElement.classList.toggle( 'done' );
+				saveTasks();
+			}
+		} );
+
+		removeButton.addEventListener( 'click', () => {
+			const index = tasks.findIndex( t => t == task );
+			tasks.splice( index, 1 );
+			taskElement.remove();
+			saveTasks();
+		} );
+
+		tasksContainer.appendChild( taskElement );
+	}
+
+	function saveTasks() {
+		localStorage.setItem( localStorageKey, JSON.stringify( tasks ) );
+	}
+}() );
