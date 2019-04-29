@@ -4,6 +4,8 @@
 	const tasksContainer = document.getElementById( 'tasks-container' );
 	const localStorageKey = 'to-do-list';
 	const categoryInput = document.getElementById( 'new-category' );
+	const addCategoryButton = document.getElementById( 'add-category' );
+	const categoriesContainer = document.getElementById( 'categories-container' );
 
 	const tasks = getInitialData();
 	tasks.forEach( renderTask );
@@ -21,7 +23,7 @@
 			addTask();
 		}
 	} );
- 
+
 	addButton.addEventListener( 'click', addTask );
 
 	function addTask() {
@@ -73,4 +75,26 @@
 	function saveTasks() {
 		localStorage.setItem( localStorageKey, JSON.stringify( tasks ) );
 	}
+
+	categoryInput.addEventListener( 'keyup', function( event ) {
+		if ( event.key === 'Enter' ) {
+			addCategory();
+		}
+	} );
+
+	addCategoryButton.addEventListener( 'click', addCategory );
+
+	function addCategory() {
+		if ( !categoryInput.value ) {
+			return;
+		}
+
+		const newCategoryElement = document.createElement( 'DIV' );
+		newCategoryElement.classList.add( 'category' );
+		newCategoryElement.innerText = categoryInput.value;
+		categoryInput.value = '';
+		categoriesContainer.appendChild( newCategoryElement );
+	}
 }() );
+
+
