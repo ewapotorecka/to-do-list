@@ -3,6 +3,7 @@
 	const taskInput = document.getElementById( 'task' );
 	const tasksContainer = document.getElementById( 'tasks-container' );
 	const localStorageKey = 'to-do-list';
+	const categoryInput = document.getElementById( 'new-category' );
 
 	const tasks = getInitialData();
 	tasks.forEach( renderTask );
@@ -20,7 +21,7 @@
 			addTask();
 		}
 	} );
-
+ 
 	addButton.addEventListener( 'click', addTask );
 
 	function addTask() {

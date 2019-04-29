@@ -21,10 +21,35 @@
 		}
 
 		.main {
-			width: 350px;
-			margin: 0 auto;
+		
 		}
 
+		.tasks {
+			display: flex;
+		}
+
+		#categories {
+			border: 1px solid white;
+			max-width: 200px;
+			flex: 1;
+			
+		
+		}
+
+		.category {
+			color: #4a4a4a;
+			background-color: #eee;
+			padding: 5px 8px;
+			box-sizing: border-box;
+			margin-top: 10px;
+			transition: 0.2s ease-in-out;
+			cursor: pointer;
+		}
+
+		#tasks-space {
+			width: 350px;
+   			margin: 0 auto;
+		}
 		h1 {
 			text-align: center;
 		}
@@ -106,14 +131,27 @@
 
 <body>
 	<div class="main">
-		<h1>
-			To-do list
-		</h1>
-		<div id="input-container">
-			<input type="text" placeholder="Add your task here" id="task" maxlength="45">
-			<button id="add">Add</button>
+	
+		<div class="tasks">
+			<div id="categories">
+				<h2>Categories</h2>
+				<div class="category">Main</div>
+				<input type="text" placeholder="New category" id="new-category" maxlength="40">
+				<button id="add-category">Add</button>
+			</div>
+			<div style="flex:1">
+				<h1>
+					To-do list
+				</h1>
+				<div id="tasks-space">
+					<div id="input-container">
+						<input type="text" placeholder="Add your task here" id="task" maxlength="45">
+						<button id="add">Add</button>
+					</div>
+					<div id="tasks-container"></div>
+				</div>
+			</div>
 		</div>
-		<div id="tasks-container"></div>
 	</div>
 	<script src="toDoList.js"></script>
 </body>
