@@ -46,7 +46,7 @@
 			cursor: pointer;
 		}
 
-		#tasks-space {
+		#tasks-list {
 			width: 350px;
    			margin: 0 auto;
 		}
@@ -141,11 +141,11 @@
 				<input type="text" placeholder="New category" id="new-category" maxlength="40">
 				<button id="add-category">Add</button>
 			</div>
-			<div style="flex:1">
+			<div  id="task-list" style="flex:1">
 				<h1>
 					To-do list
 				</h1>
-				<div id="tasks-space">
+				<div>
 					<div id="input-container">
 						<input type="text" placeholder="Add your task here" id="task" maxlength="45">
 						<button id="add">Add</button>
@@ -155,7 +155,7 @@
 			</div>
 		</div>
 	</div>
-	<script src="TaskList.js"></script>
+	<script src="dist/main.js"></script>
 </body>
 
 </html>
