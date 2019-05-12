@@ -1,23 +1,34 @@
 
 export class TaskList {
-	constructor( { el, tasks } ) {
-		this._taskInput = el.querySelector( '#task' );
-		this._tasksContainer = el.querySelector( '#tasks-container' );
-		this._addButton = el.querySelector( '#add' );
-		this._tasks = tasks;
-		tasks.forEach( task => this._renderTask( task ) );
+	constructor( { containerElement, tasks, categoryName } ) {
+		this._taskInput = containerElement.querySelector( '#task' );
+		this._tasksContainer = containerElement.querySelector( '#tasks-container' );
+		this._addButton = containerElement.querySelector( '#add' );
+		this._categoryNameHeader = containerElement.querySelector( '#category-name' );
+		this._onChangeListeners = [];
+
+		this.set( { categoryName, tasks } );
+
 		this._addButton.addEventListener( 'click', () => this._addTask() );
-		this._taskInput.addEventListener( 'keyup', function( event ) {
+		this._taskInput.addEventListener( 'keyup', event => {
 			if ( event.key === 'Enter' ) {
 				this._addTask();
 			}
 		} );
-		this._onChangeListeners = [];
 	}
+
 	onChange( listener ) {
 		this._onChangeListeners.push( listener );
 	}
-	set( { categoryName, items } ) { }
+
+	set( { categoryName, tasks } ) {
+		this._categoryNameHeader.innerText = categoryName;
+		this._tasksContainer.innerHTML = '';
+		this._tasks = tasks;
+
+		tasks.forEach( task => this._renderTask( task ) );
+	}
+
 	_addTask() {
 		if ( !this._taskInput.value ) {
 			return;

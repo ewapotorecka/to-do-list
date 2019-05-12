@@ -1,14 +1,15 @@
 import { TaskList } from './TaskList';
 import { Categories } from './Categories';
 
-const taskList = new TaskList( {
-	el: document.getElementById( 'task-list' ),
-	tasks: loadTaskListItems( 'main' )
+const categories = new Categories( {
+	containerElement: document.getElementById( 'categories' ),
+	categories: loadCategories()
 } );
 
-const categories = new Categories( {
-	el: document.getElementById( 'categories' ),
-	categories: loadCategories()
+const taskList = new TaskList( {
+	containerElement: document.getElementById( 'task-list' ),
+	tasks: loadTaskListItems( categories.getCurrentCategoryName() ),
+	categoryName: categories.getCurrentCategoryName()
 } );
 
 taskList.onChange( tasks => saveActiveTaskList( tasks ) );
@@ -16,15 +17,17 @@ taskList.onChange( tasks => saveActiveTaskList( tasks ) );
 categories.onChange( categoryName => {
 	taskList.set( {
 		categoryName,
-		items: loadTaskListItems( categories.getCurrentCategoryName() )
+		tasks: loadTaskListItems( categoryName )
 	} );
 } );
 
-categories.onAdd( categoryName => {
-	taskList.set( {
-		categoryName,
-		items: loadTaskListItems( categories.getCurrentCategoryName() )
-	} );
+categories.onAdd( categories => {
+	// taskList.set( {
+	// 	categoryName,
+	// 	items: loadTaskListItems( categories.getCurrentCategoryName() )
+	// } );
+
+
 } );
 
 function loadTaskListItems( categoryName ) {
