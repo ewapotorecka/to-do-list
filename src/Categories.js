@@ -5,7 +5,7 @@ export class Categories {
 		this._addCategoryButton = containerElement.querySelector( '#add-category' );
 		this._categoriesContainer = containerElement.querySelector( '#categories-container' );
 		this._categories = categories;
-		this._categoryInput.addEventListener( 'keyup', function( event ) {
+		this._categoryInput.addEventListener( 'keyup', event => {
 			if ( event.key === 'Enter' ) {
 				this._addCategory();
 			}
@@ -15,6 +15,7 @@ export class Categories {
 		this._onChangeListeners = [];
 		this._onAddListeners = [];
 		this._currentCategoryName = this._categories[ 0 ];
+		this._renderCategory( this._currentCategoryName );
 	}
 
 	onChange( listener ) {
@@ -41,19 +42,29 @@ export class Categories {
 		this._categories.push( category );
 		this._renderCategory( category );
 
-		this._onAddListeners.forEach( listener => listener( this._categories ) );
+		this._onAddListeners.forEach( listener => listener( category.name ) );
 	}
 
 	_renderCategory( category ) {
 		const newCategoryElement = document.createElement( 'DIV' );
+		const removeButton = document.createElement( 'BUTTON' );
+
 		newCategoryElement.classList.add( 'category' );
 		newCategoryElement.innerText = category.name;
+		this._currentCategoryName = category.name;
 		this._categoryInput.value = '';
 		this._categoriesContainer.appendChild( newCategoryElement );
+		removeButton.innerHTML = 'X';
+		removeButton.classList.add( 'remove' );
+		newCategoryElement.appendChild( removeButton );
 
 		newCategoryElement.addEventListener( 'click', () => {
 			this._currentCategoryName = category.name;
 			this._onChangeListeners.forEach( listener => listener( category.name ) );
+		} );
+
+		removeButton.addEventListener( 'click', () => {
+			newCategoryElement.remove();
 		} );
 	}
 }

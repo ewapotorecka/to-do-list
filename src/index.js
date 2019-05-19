@@ -21,13 +21,11 @@ categories.onChange( categoryName => {
 	} );
 } );
 
-categories.onAdd( categories => {
-	// taskList.set( {
-	// 	categoryName,
-	// 	items: loadTaskListItems( categories.getCurrentCategoryName() )
-	// } );
-
-
+categories.onAdd( categoryName => {
+	taskList.set( {
+		categoryName,
+		tasks: loadTaskListItems( categoryName )
+	} );
 } );
 
 function loadTaskListItems( categoryName ) {
@@ -44,6 +42,7 @@ function saveActiveTaskList( tasks ) {
 }
 
 function loadCategories() {
-	return [ 'main' ];
+	const categories = [ { name: 'Main' } ];
+	return categories;
 }
 
