@@ -1,5 +1,13 @@
 
 export class Categories {
+	private _categoryInput: HTMLInputElement;
+	private _addCategoryButton: HTMLButtonElement;
+	private _categoriesContainer: HTMLElement;
+	private _categories: string[];
+	private _onChangeListeners: Function[];
+	private _onAddListeners: Function[];
+	private _currentCategoryName: string;
+
 	constructor( { containerElement, categories } ) {
 		this._categoryInput = containerElement.querySelector( '#new-category' );
 		this._addCategoryButton = containerElement.querySelector( '#add-category' );

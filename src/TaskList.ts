@@ -1,5 +1,12 @@
 
 export class TaskList {
+	private _taskInput: HTMLInputElement;
+	private _tasksContainer: HTMLElement;
+	private _addButton: HTMLElement;
+	private _categoryNameHeader: HTMLElement;
+	private _onChangeListeners: Function[];
+	private _tasks: Task[];
+
 	constructor( { containerElement, tasks, categoryName } ) {
 		this._taskInput = containerElement.querySelector( '#task' );
 		this._tasksContainer = containerElement.querySelector( '#tasks-container' );
@@ -74,4 +81,9 @@ export class TaskList {
 
 		this._tasksContainer.appendChild( taskElement );
 	}
+}
+
+interface Task {
+	done: boolean;
+	value: string;
 }
