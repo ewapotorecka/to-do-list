@@ -4,14 +4,14 @@ export class TaskList {
 	private _tasksContainer: HTMLElement;
 	private _addButton: HTMLElement;
 	private _categoryNameHeader: HTMLElement;
-	private _onChangeListeners: Function[];
-	private _tasks: Task[];
+	private _onChangeListeners: ( ( task:Task[] ) => void )[];
+	private _tasks!: Task[];
 
-	constructor( { containerElement, tasks, categoryName } ) {
-		this._taskInput = containerElement.querySelector( '#task' );
-		this._tasksContainer = containerElement.querySelector( '#tasks-container' );
-		this._addButton = containerElement.querySelector( '#add' );
-		this._categoryNameHeader = containerElement.querySelector( '#category-name' );
+	constructor( { containerElement, tasks, categoryName }: TaskListOptions ) {
+		this._taskInput = containerElement.querySelector( '#task' ) as HTMLInputElement;
+		this._tasksContainer = containerElement.querySelector( '#tasks-container' ) as HTMLElement;
+		this._addButton = containerElement.querySelector( '#add' ) as HTMLButtonElement;
+		this._categoryNameHeader = containerElement.querySelector( '#category-name' ) as HTMLHeadElement;
 		this._onChangeListeners = [];
 
 		this.set( { categoryName, tasks } );
@@ -24,11 +24,11 @@ export class TaskList {
 		} );
 	}
 
-	onChange( listener ) {
+	onChange( listener: ( task:Task[] ) => void ) {
 		this._onChangeListeners.push( listener );
 	}
 
-	set( { categoryName, tasks } ) {
+	set( { categoryName, tasks }: { categoryName: string; tasks: Task[] } ) {
 		this._categoryNameHeader.innerText = categoryName;
 		this._tasksContainer.innerHTML = '';
 		this._tasks = tasks;
@@ -51,7 +51,7 @@ export class TaskList {
 		this._onChangeListeners.forEach( listener => listener( this._tasks ) );
 	}
 
-	_renderTask( task ) {
+	_renderTask( task: Task ) {
 		const taskElement = document.createElement( 'DIV' );
 		const removeButton = document.createElement( 'BUTTON' );
 
@@ -83,7 +83,13 @@ export class TaskList {
 	}
 }
 
-interface Task {
+ export interface Task {
 	done: boolean;
 	value: string;
+}
+
+interface TaskListOptions {
+	containerElement: HTMLElement;
+	tasks: Task[];
+	categoryName: string;
 }

@@ -4,14 +4,15 @@ export class Categories {
 	private _addCategoryButton: HTMLButtonElement;
 	private _categoriesContainer: HTMLElement;
 	private _categories: string[];
-	private _onChangeListeners: Function[];
-	private _onAddListeners: Function[];
+	private _onChangeListeners: ( ( categoryName: string ) => void )[];
+	private _onAddListeners: ( ( categoryName: string ) => void )[];
+	//private _onRemoveListeners: ( ( categoryName: string ) => void[] );
 	private _currentCategoryName: string;
 
-	constructor( { containerElement, categories } ) {
-		this._categoryInput = containerElement.querySelector( '#new-category' );
-		this._addCategoryButton = containerElement.querySelector( '#add-category' );
-		this._categoriesContainer = containerElement.querySelector( '#categories-container' );
+	constructor( { containerElement, categories }: CategoryOptions ) {
+		this._categoryInput = containerElement.querySelector( '#new-category' ) as HTMLInputElement;
+		this._addCategoryButton = containerElement.querySelector( '#add-category' ) as HTMLButtonElement;
+		this._categoriesContainer = containerElement.querySelector( '#categories-container' ) as HTMLElement;
 		this._categories = categories;
 		this._categoryInput.addEventListener( 'keyup', event => {
 			if ( event.key === 'Enter' ) {
@@ -27,11 +28,11 @@ export class Categories {
 		categories.forEach( category => this._renderCategory( category ) );
 	}
 
-	onChange( listener ) {
+	onChange( listener: ( categoryName: string ) => void ) {
 		this._onChangeListeners.push( listener );
 	}
 
-	onAdd( listener ) {
+	onAdd( listener: ( categoryName: string ) => void ) {
 		this._onAddListeners.push( listener );
 	}
 
@@ -54,7 +55,7 @@ export class Categories {
 		this._onAddListeners.forEach( listener => listener( categoryName ) );
 	}
 
-	_renderCategory( categoryName ) {
+	_renderCategory( categoryName: string ) {
 		const newCategoryElement = document.createElement( 'DIV' );
 		const removeButton = document.createElement( 'BUTTON' );
 
@@ -75,4 +76,9 @@ export class Categories {
 			newCategoryElement.remove();
 		} );
 	}
+}
+
+interface CategoryOptions {
+	containerElement: HTMLElement;
+	categories: string[];
 }
