@@ -64,7 +64,7 @@ export class TaskList {
 				this._onChangeListeners.forEach( listener => listener( this._tasks ) );
 			}
 		} );
-
+ 
 		removeButton.addEventListener( 'click', () => {
 			const index = this._tasks.findIndex( t => t == task );
 			this._tasks.splice( index, 1 );

@@ -15,7 +15,8 @@ export class Categories {
 		this._onChangeListeners = [];
 		this._onAddListeners = [];
 		this._currentCategoryName = this._categories[ 0 ];
-		this._renderCategory( this._currentCategoryName );
+
+		categories.forEach( category => this._renderCategory( category ) );
 	}
 
 	onChange( listener ) {
@@ -35,23 +36,22 @@ export class Categories {
 			return;
 		}
 
-		const category = {
-			name: this._categoryInput.value
-		};
+		const categoryName = this._categoryInput.value;
 
-		this._categories.push( category );
-		this._renderCategory( category );
+		this._categories.push( categoryName );
+		this._renderCategory( categoryName );
 
-		this._onAddListeners.forEach( listener => listener( category.name ) );
+		this._currentCategoryName = categoryName;
+
+		this._onAddListeners.forEach( listener => listener( categoryName ) );
 	}
 
-	_renderCategory( category ) {
+	_renderCategory( categoryName ) {
 		const newCategoryElement = document.createElement( 'DIV' );
 		const removeButton = document.createElement( 'BUTTON' );
 
 		newCategoryElement.classList.add( 'category' );
-		newCategoryElement.innerText = category.name;
-		this._currentCategoryName = category.name;
+		newCategoryElement.innerText = categoryName;
 		this._categoryInput.value = '';
 		this._categoriesContainer.appendChild( newCategoryElement );
 		removeButton.innerHTML = 'X';
@@ -59,8 +59,8 @@ export class Categories {
 		newCategoryElement.appendChild( removeButton );
 
 		newCategoryElement.addEventListener( 'click', () => {
-			this._currentCategoryName = category.name;
-			this._onChangeListeners.forEach( listener => listener( category.name ) );
+			this._currentCategoryName = categoryName;
+			this._onChangeListeners.forEach( listener => listener( categoryName ) );
 		} );
 
 		removeButton.addEventListener( 'click', () => {

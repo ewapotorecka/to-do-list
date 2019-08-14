@@ -3,7 +3,7 @@ import { Categories } from './Categories';
 
 const categories = new Categories( {
 	containerElement: document.getElementById( 'categories' ),
-	categories: loadCategories()
+	categories: loadCategoryNames()
 } );
 
 const taskList = new TaskList( {
@@ -37,12 +37,17 @@ function loadTaskListItems( categoryName ) {
 }
 
 function saveActiveTaskList( tasks ) {
+	console.log( tasks, 'task-list-' + categories.getCurrentCategoryName() );
 	const categoryName = categories.getCurrentCategoryName();
 	localStorage.setItem( 'task-list-' + categoryName, JSON.stringify( tasks ) );
 }
 
-function loadCategories() {
-	const categories = [ { name: 'Main' } ];
-	return categories;
-}
+function loadCategoryNames() {
+	const categoryNames = Object.keys( localStorage )
+		.filter( el => el.startsWith( 'task-list-' ) )
+		.sort();
 
+	return categoryNames.length > 0 ?
+		categoryNames.map( name => name.replace( /^task-list-/, '' ) ) :
+		[ 'Main' ];
+}

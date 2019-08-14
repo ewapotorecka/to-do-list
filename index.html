@@ -10,13 +10,12 @@
 
 	<style>
 		:root {
-			--pink: #da196e;
 			--task-height: 30px;
 		}
 
 		body {
-			background-color: black;
-			color: grey;
+			background-color:#D5D5D5;
+			color: #373737;
 			font-family: Oswald;
 		}
 
@@ -29,33 +28,46 @@
 		}
 
 		#categories {
-			border: 1px solid white;
+			border-radius: 5px;
 			max-width: 200px;
 			flex: 1;
+			margin-left: 20px;
+			margin-top: 20px;
+			padding: 10px;
+			background-color: #6D7993
 			
 		
 		}
 
 		.category {
 			color: #4a4a4a;
-			background-color: #eee;
+			background-color: #D5D5D5;
 			padding: 5px 8px;
 			box-sizing: border-box;
 			margin-top: 10px;
 			transition: 0.2s ease-in-out;
 			cursor: pointer;
+			border-radius: 2px;
 		}
 
 		#tasks-list {
 			width: 350px;
    			margin: 0 auto;
 		}
+
 		h1 {
 			text-align: center;
 		}
 
+		#tasks-space {
+			width: 446px;
+			margin: 0 auto;
+		}
+
 		div#input-container {
 			height: var( --task-height );
+			display: block;
+			margin: 0 auto;
 		}
 
 		input#task {
@@ -69,6 +81,8 @@
 			float: left;
 			outline: none;
 			font-family: Oswald;
+			margin: 0 auto;
+			border-radius: 2px;
 		}
 
 		input#task:focus {
@@ -78,16 +92,17 @@
 		button#add {
 			width: 56px;
 			height: var( --task-height );
-			background-color: var( --pink );
+			background-color: #373737;
 			margin: 0;
 			border: none;
 			display: block;
-			float: right;
+			float: left;
 			cursor: pointer;
 			font-family: Oswald;
 			outline: none;
 			font-size: 11pt;
     		color: white;
+			border-radius: 2px;
 		}
 
 		button#add:hover {
@@ -106,10 +121,12 @@
 			margin-top: 10px;
 			transition: 0.2s ease-in-out;
 			cursor: pointer;
+			width: 346px;
+			border-radius: 2px;
 		}
 
 		.task-list-item.done {
-			background-color: lightslategray;
+			background-color: #96858F;
 			color: white;
 		}
 
@@ -119,12 +136,45 @@
 
 		.remove {
 			float: right;
-			background: var( --pink );
+			background: #373737;
 			border-radius: 50px;
 			width: 25px;
 			height: 25px;
 			color: white;
 			cursor: pointer;
+		}
+
+		input#new-category {
+			height: var( --task-height );
+			padding: 5px 8px;
+			box-sizing: border-box;
+			font-size: 11pt;
+			border: none;
+			width: 144px;
+			display: block;
+			float: left;
+			outline: none;
+			font-family: Oswald;
+			margin: 0 auto;
+			margin-top: 10px;
+			border-radius: 2px;
+		}
+
+		button#add-category {
+			width: 56px;
+			height: var( --task-height );
+			background-color: #373737;
+			margin: 0;
+			border: none;
+			display: block;
+			float: left;
+			cursor: pointer;
+			font-family: Oswald;
+			outline: none;
+			font-size: 11pt;
+    		color: white;
+			margin-top: 10px;
+			border-radius: 2px;
 		}
 	</style>
 </head>
@@ -146,7 +196,7 @@
 						To-do list
 					</div>
 				</h1>
-				<div>
+				<div id = "tasks-space">
 					<div id="input-container">
 						<input type="text" placeholder="Add your task here" id="task" maxlength="45">
 						<button id="add">Add</button>
