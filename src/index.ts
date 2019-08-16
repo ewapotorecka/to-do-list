@@ -15,10 +15,20 @@ const taskList = new TaskList( {
 taskList.onChange( tasks => saveActiveTaskList( tasks ) );
 
 categories.onChange( ( categoryName: string ) => {
-	taskList.set( {
-		categoryName,
-		tasks: loadTaskListItems( categoryName )
-	} );
+	if ( categoryName ) {
+		taskList.set( {
+			categoryName,
+			tasks: loadTaskListItems( categoryName )
+		} );
+	} else {
+		categories.addCategory( 'Main' );
+		taskList.set( {
+			categoryName: 'Main',
+			tasks: []
+		} );
+	}
+
+
 } );
 
 categories.onAdd( ( categoryName: string ) => {
@@ -26,19 +36,20 @@ categories.onAdd( ( categoryName: string ) => {
 		categoryName,
 		tasks: loadTaskListItems( categoryName )
 	} );
+	saveActiveTaskList( [] );
 } );
+
 
 function loadTaskListItems( categoryName: string ) {
 	const item = localStorage.getItem( 'task-list-' + categoryName )
 	if ( item ) {
-		return JSON.parse( item);
+		return JSON.parse( item );
 	} else {
 		return [];
 	}
 }
 
 function saveActiveTaskList( tasks: Task[] ) {
-	console.log( tasks, 'task-list-' + categories.getCurrentCategoryName() );
 	const categoryName = categories.getCurrentCategoryName();
 	localStorage.setItem( 'task-list-' + categoryName, JSON.stringify( tasks ) );
 }
@@ -52,3 +63,4 @@ function loadCategoryNames() {
 		categoryNames.map( name => name.replace( /^task-list-/, '' ) ) :
 		[ 'Main' ];
 }
+

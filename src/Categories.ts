@@ -6,7 +6,6 @@ export class Categories {
 	private _categories: string[];
 	private _onChangeListeners: ( ( categoryName: string ) => void )[];
 	private _onAddListeners: ( ( categoryName: string ) => void )[];
-	//private _onRemoveListeners: ( ( categoryName: string ) => void[] );
 	private _currentCategoryName: string;
 
 	constructor( { containerElement, categories }: CategoryOptions ) {
@@ -47,6 +46,10 @@ export class Categories {
 
 		const categoryName = this._categoryInput.value;
 
+		this.addCategory( categoryName );
+	}
+
+	addCategory( categoryName: string ) {
 		this._categories.push( categoryName );
 		this._renderCategory( categoryName );
 
@@ -67,14 +70,23 @@ export class Categories {
 		removeButton.classList.add( 'remove' );
 		newCategoryElement.appendChild( removeButton );
 
-		newCategoryElement.addEventListener( 'click', () => {
+		newCategoryElement.addEventListener( 'click', ( e ) => {
+			if ( e.target !== newCategoryElement ) return;
+
 			this._currentCategoryName = categoryName;
 			this._onChangeListeners.forEach( listener => listener( categoryName ) );
 		} );
 
 		removeButton.addEventListener( 'click', () => {
+			const index = this._categories.findIndex( category => category == categoryName );
+			localStorage.removeItem( 'task-list-' + categoryName );
+			this._categories.splice( index, 1 );
 			newCategoryElement.remove();
+			categoryName = this._categories[ 0 ];
+			this._onChangeListeners.forEach( listener => listener( categoryName ) );
 		} );
+
+		// console.trace();
 	}
 }
 
