@@ -4,8 +4,9 @@ export class Categories {
 	private _addCategoryButton: HTMLButtonElement;
 	private _categoriesContainer: HTMLElement;
 	private _categories: string[];
-	private _onChangeListeners: ( ( categoryName: string ) => void )[];
-	private _onAddListeners: ( ( categoryName: string ) => void )[];
+	private _onChangeListeners: ( ( categoryName: string ) => void )[] = [];
+	private _onAddListeners: ( ( categoryName: string ) => void )[] = [];
+	private _onRemoveListeners: ( ( categoryName: string ) => void )[] = [];
 	private _currentCategoryName: string;
 
 	constructor( { containerElement, categories }: CategoryOptions ) {
@@ -19,9 +20,7 @@ export class Categories {
 			}
 		} );
 		this._addCategoryButton.addEventListener( 'click', () => this._addCategory() );
-
-		this._onChangeListeners = [];
-		this._onAddListeners = [];
+		
 		this._currentCategoryName = this._categories[ 0 ];
 
 		categories.forEach( category => this._renderCategory( category ) );
@@ -33,6 +32,10 @@ export class Categories {
 
 	onAdd( listener: ( categoryName: string ) => void ) {
 		this._onAddListeners.push( listener );
+	}
+
+	onRemove( listener: ( categoryName: string ) => void ) {
+		this._onRemoveListeners.push( listener );
 	}
 
 	getCurrentCategoryName() {
@@ -79,10 +82,11 @@ export class Categories {
 
 		removeButton.addEventListener( 'click', () => {
 			const index = this._categories.findIndex( category => category == categoryName );
-			localStorage.removeItem( 'task-list-' + categoryName );
+			this._onRemoveListeners.forEach( listener => listener( categoryName ) );
 			this._categories.splice( index, 1 );
 			newCategoryElement.remove();
 			categoryName = this._categories[ 0 ];
+			
 			this._onChangeListeners.forEach( listener => listener( categoryName ) );
 		} );
 

@@ -44,6 +44,11 @@ loadCategoryNames().then( categoryNames => {
 			
 			saveCategory( categoryName, [] );
 		} );
+
+		categories.onRemove( ( categoryName: string ) => {
+			removeCategory( categoryName );
+
+		})
 	} );
 } );
 
@@ -60,6 +65,12 @@ function saveCategory( categoryName: string, tasks: Task[] ) {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify( tasks )
+	} );
+}
+
+function removeCategory( categoryName: string ) {
+	return fetch( `/api/categories/${categoryName}`, {
+		method: 'DELETE'
 	} );
 }
 

@@ -50,6 +50,13 @@ app.put( '/api/categories/:categoryName', ( request, response ) => {
 	response.status( 200 ).send( { status: 'ok' } );
 } );
 
+app.delete( '/api/categories/:categoryName', ( request, response ) => {
+	const categoryName = request.params.categoryName;
+	delete categories[ categoryName ];
+
+	response.status( 200 ).send( { status: 'ok' } );
+} );
+
 function saveCategories() {
 	fs.writeFileSync( 'data.json', JSON.stringify( categories, null, '\t' ) );
 }
