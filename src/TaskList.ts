@@ -4,15 +4,16 @@ export class TaskList {
 	private _tasksContainer: HTMLElement;
 	private _addButton: HTMLElement;
 	private _categoryNameHeader: HTMLElement;
-	private _onChangeListeners: ( ( task:Task[] ) => void )[];
+	private _onChangeListeners: ( ( categoryName: string, tasks: Task[] ) => void )[] = [];
 	private _tasks!: Task[];
+	private _categoryName!: string;
+	private elements: { [ name: string ]: HTMLElement } = {};
 
 	constructor( { containerElement, tasks, categoryName }: TaskListOptions ) {
 		this._taskInput = containerElement.querySelector( '#task' ) as HTMLInputElement;
 		this._tasksContainer = containerElement.querySelector( '#tasks-container' ) as HTMLElement;
 		this._addButton = containerElement.querySelector( '#add' ) as HTMLButtonElement;
 		this._categoryNameHeader = containerElement.querySelector( '#category-name' ) as HTMLHeadElement;
-		this._onChangeListeners = [];
 
 		this.set( { categoryName, tasks } );
 
@@ -24,7 +25,7 @@ export class TaskList {
 		} );
 	}
 
-	onChange( listener: ( task:Task[] ) => void ) {
+	onChange( listener: ( categoryName: string, tasks: Task[] ) => void ) {
 		this._onChangeListeners.push( listener );
 	}
 
@@ -32,6 +33,7 @@ export class TaskList {
 		this._categoryNameHeader.innerText = categoryName;
 		this._tasksContainer.innerHTML = '';
 		this._tasks = tasks;
+		this._categoryName = categoryName;
 
 		tasks.forEach( task => this._renderTask( task ) );
 	}
@@ -48,7 +50,7 @@ export class TaskList {
 
 		this._tasks.push( task );
 		this._renderTask( task );
-		this._onChangeListeners.forEach( listener => listener( this._tasks ) );
+		this._onChangeListeners.forEach( listener => listener( this._categoryName, this._tasks ) );
 	}
 
 	_renderTask( task: Task ) {
@@ -57,6 +59,7 @@ export class TaskList {
 
 		taskElement.classList.add( 'task-list-item' );
 		taskElement.innerText = task.value;
+		const name = task.value;
 		this._taskInput.value = '';
 		removeButton.innerHTML = 'X';
 		removeButton.classList.add( 'remove' );
@@ -68,22 +71,29 @@ export class TaskList {
 			if ( event.target === taskElement ) {
 				task.done = !task.done;
 				taskElement.classList.toggle( 'done' );
-				this._onChangeListeners.forEach( listener => listener( this._tasks ) );
+				this._onChangeListeners.forEach( listener => listener( this._categoryName, this._tasks ) );
 			}
 		} );
- 
+
 		removeButton.addEventListener( 'click', () => {
 			const index = this._tasks.findIndex( t => t == task );
 			this._tasks.splice( index, 1 );
 			taskElement.remove();
-			this._onChangeListeners.forEach( listener => listener( this._tasks ) );
+			this._onChangeListeners.forEach( listener => listener( this._categoryName, this._tasks ) );
 		} );
 
 		this._tasksContainer.appendChild( taskElement );
+		this.elements[ name ] = taskElement;
+		console.log(this.elements);
+		console.log(this._tasks);
+	}
+
+	private sortTaskList() {
+
 	}
 }
 
- export interface Task {
+export interface Task {
 	done: boolean;
 	value: string;
 }

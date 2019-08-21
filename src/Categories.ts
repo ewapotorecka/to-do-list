@@ -8,6 +8,7 @@ export class Categories {
 	private _onAddListeners: ( ( categoryName: string ) => void )[] = [];
 	private _onRemoveListeners: ( ( categoryName: string ) => void )[] = [];
 	private _currentCategoryName: string;
+	private elements: { [ name: string ]: HTMLElement } = {};
 
 	constructor( { containerElement, categories }: CategoryOptions ) {
 		this._categoryInput = containerElement.querySelector( '#new-category' ) as HTMLInputElement;
@@ -20,10 +21,15 @@ export class Categories {
 			}
 		} );
 		this._addCategoryButton.addEventListener( 'click', () => this._addCategory() );
-		
+
 		this._currentCategoryName = this._categories[ 0 ];
 
 		categories.forEach( category => this._renderCategory( category ) );
+		this.updateActiveElement();
+	}
+
+	public get categoryNames(): ReadonlyArray<string> {
+		return this._categories;
 	}
 
 	onChange( listener: ( categoryName: string ) => void ) {
@@ -59,6 +65,7 @@ export class Categories {
 		this._currentCategoryName = categoryName;
 
 		this._onAddListeners.forEach( listener => listener( categoryName ) );
+		this.updateActiveElement();
 	}
 
 	_renderCategory( categoryName: string ) {
@@ -78,19 +85,30 @@ export class Categories {
 
 			this._currentCategoryName = categoryName;
 			this._onChangeListeners.forEach( listener => listener( categoryName ) );
+			this.updateActiveElement();
 		} );
 
 		removeButton.addEventListener( 'click', () => {
 			const index = this._categories.findIndex( category => category == categoryName );
-			this._onRemoveListeners.forEach( listener => listener( categoryName ) );
 			this._categories.splice( index, 1 );
+			this._onRemoveListeners.forEach( listener => listener( categoryName ) );
 			newCategoryElement.remove();
-			categoryName = this._categories[ 0 ];
-			
-			this._onChangeListeners.forEach( listener => listener( categoryName ) );
 		} );
 
-		// console.trace();
+		this.elements[ categoryName ] = newCategoryElement;
+	
+	}
+
+	private updateActiveElement() {
+		for ( const [ name, element ] of Object.entries( this.elements ) ) {
+			if ( name == this._currentCategoryName ) {
+				element.classList.add( 'active' );
+			} else {
+				element.classList.remove( 'active' );
+			}
+		}
+		
+
 	}
 }
 

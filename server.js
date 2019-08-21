@@ -5,11 +5,9 @@ const express = require( 'express' );
 const app = express();
 const fs = require( 'fs' );
 
-let categories = {};
-
-if ( fs.existsSync( 'data.json' ) ) {
-	categories = JSON.parse( fs.readFileSync( 'data.json' ) );
-}
+const categories = fs.existsSync( 'data.json' ) ?
+	JSON.parse( fs.readFileSync( 'data.json' ) ) :
+	{};
 
 app.use( express.json() );
 
@@ -53,6 +51,8 @@ app.put( '/api/categories/:categoryName', ( request, response ) => {
 app.delete( '/api/categories/:categoryName', ( request, response ) => {
 	const categoryName = request.params.categoryName;
 	delete categories[ categoryName ];
+
+	saveCategories();
 
 	response.status( 200 ).send( { status: 'ok' } );
 } );

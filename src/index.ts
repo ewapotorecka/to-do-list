@@ -1,67 +1,72 @@
 import { TaskList, Task } from './TaskList';
 import { Categories } from './Categories';
 
-loadCategoryNames().then( categoryNames => {
+const defaultCategoryName = 'Main';
+
+loadCategoryNames().then( async categoryNames => {
 	const categories = new Categories( {
 		containerElement: document.getElementById( 'categories' ) as HTMLElement,
 		categories: categoryNames
 	} );
 
-	loadTaskListItems( categories.getCurrentCategoryName() ).then( tasks => {
-		const taskList = new TaskList( {
-			containerElement: document.getElementById( 'task-list' ) as HTMLElement,
-			tasks,
-			categoryName: categories.getCurrentCategoryName()
-		} );
-	
-		taskList.onChange( tasks => saveCategory(
-			categories.getCurrentCategoryName(),
-			tasks
-		) );
+	const taskList = new TaskList( {
+		containerElement: document.getElementById( 'task-list' ) as HTMLElement,
+		tasks: await loadTaskListItems( categories.getCurrentCategoryName() ),
+		categoryName: categories.getCurrentCategoryName()
+	} );
 
-		categories.onChange( ( categoryName: string ) => {
-			if ( categoryName ) {
-				loadTaskListItems( categoryName ).then( tasks => {
-					taskList.set( {
-						categoryName,
-						tasks,
-					} );
-				} );
-			} else {
-				categories.addCategory( 'Main' );
-				taskList.set( {
-					categoryName: 'Main',
-					tasks: []
-				} );
-			}
+	taskList.onChange( ( categoryName, tasks ) => saveCategory(
+		categoryName,
+		tasks
+	) );
+
+	categories.onAdd( ( categoryName: string ) => {
+		taskList.set( {
+			categoryName,
+			tasks: [],
 		} );
-		
-		categories.onAdd( ( categoryName: string ) => {
+
+		saveCategory( categoryName, [] );
+	} );
+
+	categories.onChange( async ( categoryName: string ) => {
+		taskList.set( {
+			categoryName,
+			tasks: await loadTaskListItems( categoryName ),
+		} );
+	} );
+
+	categories.onRemove( async ( categoryName ) => {
+		removeCategory( categoryName );
+
+		const nextCategoryName = categories.categoryNames[ 0 ];
+
+		if ( nextCategoryName ) {
 			taskList.set( {
-				categoryName,
+				categoryName: nextCategoryName,
+				tasks: await loadTaskListItems( nextCategoryName ),
+			} );
+		} else {
+			taskList.set( {
+				categoryName: defaultCategoryName,
 				tasks: [],
 			} );
-			
-			saveCategory( categoryName, [] );
-		} );
 
-		categories.onRemove( ( categoryName: string ) => {
-			removeCategory( categoryName );
-
-		})
+			categories.addCategory( defaultCategoryName );
+		}
 	} );
 } );
 
 function loadTaskListItems( categoryName: string ): Promise<Task[]> {
-	return fetch( `/api/categories/${categoryName}`)
+	return fetch( `/api/categories/${ categoryName }` )
 		.then( resp => resp.json() )
 		.then( tasks => tasks || [] );
 }
 
 function saveCategory( categoryName: string, tasks: Task[] ) {
-	return fetch( `/api/categories/${categoryName}`, {
+	return fetch( `/api/categories/${ categoryName }`, {
 		method: 'PUT',
-		headers: { 
+		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify( tasks )
@@ -69,7 +74,7 @@ function saveCategory( categoryName: string, tasks: Task[] ) {
 }
 
 function removeCategory( categoryName: string ) {
-	return fetch( `/api/categories/${categoryName}`, {
+	return fetch( `/api/categories/${ categoryName }`, {
 		method: 'DELETE'
 	} );
 }
@@ -77,6 +82,6 @@ function removeCategory( categoryName: string ) {
 function loadCategoryNames(): Promise<string[]> {
 	return fetch( '/api/categories' )
 		.then( resp => resp.json() )
-		.then( categoryNames => categoryNames || [ 'Main' ] );
+		.then( categoryNames => categoryNames || [ defaultCategoryName ] );
 }
 
