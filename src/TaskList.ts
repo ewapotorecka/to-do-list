@@ -84,8 +84,6 @@ export class TaskList {
 
 		this._tasksContainer.appendChild( taskElement );
 		this.elements[ name ] = taskElement;
-		console.log(this.elements);
-		console.log(this._tasks);
 	}
 
 	private sortTaskList() {
