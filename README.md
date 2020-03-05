@@ -1,6 +1,6 @@
 ### TO-DO LIST APP
 
-To-do list app, with ccategories.
+To-do list app, with categories.
 
 ![](todo.png)
 
